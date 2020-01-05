@@ -28,6 +28,7 @@ namespace MongoDB.Bson.Serialization
 {
     /// <summary>
     /// Represents a mapping between a class and a BSON document.
+    /// 李必民 2015-11-21 改默认忽略扩展字段。
     /// </summary>
     public class BsonClassMap
     {
@@ -970,12 +971,19 @@ namespace MongoDB.Bson.Serialization
             _creatorMaps.Clear();
             _creator = null;
             _declaredMemberMaps = new List<BsonMemberMap>();
-            _discriminator = _classType.Name;
+
+            //_discriminator = _classType.Name; 
+            //改类型名为类型限定名。以兼容跨程序集继承。
+            _discriminator = _classType.AssemblyQualifiedName;
+
             _discriminatorIsRequired = false;
             _extraElementsMemberMap = null;
             _idMemberMap = null;
             _ignoreExtraElements = true; // TODO: should this really be false?
-            _ignoreExtraElementsIsInherited = false;
+
+            //_ignoreExtraElementsIsInherited = false;
+            _ignoreExtraElementsIsInherited = true;//李必民  改于2015-11-21。
+
             _isRootClass = false;
             _knownTypes.Clear();
         }
@@ -1077,7 +1085,8 @@ namespace MongoDB.Bson.Serialization
         public void SetIgnoreExtraElements(bool ignoreExtraElements)
         {
             if (_frozen) { ThrowFrozenException(); }
-            _ignoreExtraElements = ignoreExtraElements;
+            //_ignoreExtraElements = ignoreExtraElements;
+            _ignoreExtraElements = true; //李必民 2015 - 11 - 21 改默认忽略扩展字段。
         }
 
         /// <summary>
@@ -1087,7 +1096,8 @@ namespace MongoDB.Bson.Serialization
         public void SetIgnoreExtraElementsIsInherited(bool ignoreExtraElementsIsInherited)
         {
             if (_frozen) { ThrowFrozenException(); }
-            _ignoreExtraElementsIsInherited = ignoreExtraElementsIsInherited;
+            //_ignoreExtraElementsIsInherited = ignoreExtraElementsIsInherited;
+            _ignoreExtraElementsIsInherited = true;//李必民 2015 - 11 - 21 改默认忽略扩展字段。
         }
 
         /// <summary>
